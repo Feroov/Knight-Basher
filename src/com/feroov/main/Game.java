@@ -1,19 +1,45 @@
 package com.feroov.main;
 
+import com.feroov.entities.Player;
+import com.feroov.levels.LevelManager;
+
+import java.awt.*;
+
 public class Game implements Runnable
 {
     private GameWindow gameWindow;
     private GamePanel gamePanel;
     private Thread gameThread;
+
     private final int FPS = 120;
     private final int UPS = 120;
 
+    private Player player;
+    private LevelManager levelManager;
+
+    public final static int TILES_DEFAULT_SIZE = 32;
+    public final static float SCALE = 2.0f;
+    public final static int TILES_IN_WIDTH = 26;
+    public final static int TILES_IN_HEIGHT = 14;
+    public final static int TILES_SIZE = (int) (TILES_DEFAULT_SIZE * SCALE);
+    public final static int GAME_WIDTH = TILES_SIZE * TILES_IN_WIDTH;
+    public final static int GAME_HEIGHT = TILES_SIZE * TILES_IN_HEIGHT;
+
     public Game()
     {
-        gamePanel = new GamePanel();
+        initClasses();
+
+        gamePanel = new GamePanel(this);
         gameWindow = new GameWindow(gamePanel);
         gamePanel.requestFocus();
+
         startGameLoop();
+    }
+
+    private void initClasses()
+    {
+        player = new Player(200, 560);
+        levelManager = new LevelManager(this);
     }
 
     private void startGameLoop()
@@ -24,7 +50,14 @@ public class Game implements Runnable
 
     public void update()
     {
-        gamePanel.updateGame();
+        player.update();
+        levelManager.update();
+    }
+
+    public void render(Graphics g)
+    {
+        levelManager.draw(g);
+        player.render(g);
     }
 
     @Override
@@ -74,4 +107,11 @@ public class Game implements Runnable
             }
         }
     }
+
+    public void windowFocusLost()
+    {
+        player.resetDirectionBooleans();
+    }
+
+    public Player getPlayer(){ return player; }
 }

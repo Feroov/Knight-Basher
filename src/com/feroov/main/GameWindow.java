@@ -2,6 +2,8 @@ package com.feroov.main;
 
 
 import javax.swing.*;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
 
 public class GameWindow
 {
@@ -19,6 +21,18 @@ public class GameWindow
         jFrame.setVisible(true);
         jFrame.pack();
         jFrame.setLocationRelativeTo(null);
+        jFrame.addWindowFocusListener(new WindowFocusListener()
+        {
+            @Override
+            public void windowLostFocus(WindowEvent e) {
+                gamePanel.getGame().windowFocusLost();
+            }
+
+            @Override
+            public void windowGainedFocus(WindowEvent e) {
+
+            }
+        });
 
         icon = new ImageIcon("res/logo.png");
         jFrame.setIconImage(icon.getImage());
