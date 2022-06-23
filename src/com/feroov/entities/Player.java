@@ -98,7 +98,7 @@ public class Player extends Entity
     {
         moving = false;
 
-        if(running){ playerSpeed = 3.0F; } else { playerSpeed = 2.0F; }
+        if(running){ playerSpeed = 3.0F; animSpeed = 6; } else { playerSpeed = 2.0F; animSpeed = 10; }
         if(jump) jump();
         if(!left && !right && !inAir)
             return;
