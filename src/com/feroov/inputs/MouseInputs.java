@@ -1,5 +1,6 @@
 package com.feroov.inputs;
 
+import com.feroov.gamestates.Gamestate;
 import com.feroov.main.GamePanel;
 
 import java.awt.event.MouseEvent;
@@ -16,7 +17,13 @@ public class MouseInputs implements MouseListener, MouseMotionListener
     }
 
     @Override
-    public void mouseClicked(MouseEvent e) {
+    public void mouseClicked(MouseEvent e)
+    {
+        switch(Gamestate.state)
+        {
+            case MENU -> gamePanel.getGame().getMenu().mouseClicked(e);
+            case PLAYING -> gamePanel.getGame().getPlaying().mouseClicked(e);
+        }
 
     }
 
