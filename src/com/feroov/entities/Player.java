@@ -16,7 +16,7 @@ public class Player extends Entity
     private int animTick, animIndex, animSpeed = 10;
     private int playerAction = IDLE;
     private boolean moving = false, attacking = false;
-    private boolean left, up, right, down, jump;
+    private boolean left, up, right, down, jump, running;
     private float playerSpeed = 2.0f;
 
     private int[][] lvlData;
@@ -98,6 +98,7 @@ public class Player extends Entity
     {
         moving = false;
 
+        if(running){ playerSpeed = 3.0F; } else { playerSpeed = 2.0F; }
         if(jump) jump();
         if(!left && !right && !inAir)
             return;
@@ -200,4 +201,6 @@ public class Player extends Entity
     public void setDown(boolean down) { this.down = down;}
 
     public void setJump(boolean jump){ this.jump = jump; }
+
+    public void setRunning(boolean running) { this.running = running; }
 }
