@@ -21,7 +21,7 @@ public class Player extends Entity
 
     private int[][] lvlData;
     private float xDrawOffset = 21 * Game.SCALE;
-    private float yDrawOfset = 10 * Game.SCALE;
+    private float yDrawOffset = 10 * Game.SCALE;
 
     private float airSpeed = 0f;
     private float gravity = 0.04f * Game.SCALE;
@@ -43,10 +43,9 @@ public class Player extends Entity
         setAnimation();
     }
 
-    public void render(Graphics g)
-    {
-        g.drawImage(animations[playerAction][animIndex], (int) (hitbox.x - xDrawOffset), (int) (hitbox.y - yDrawOfset), width, height, null);
-        //drawHitBox(g);
+    public void render(Graphics g, int lvlOffset) {
+        g.drawImage(animations[playerAction][animIndex], (int) (hitbox.x - xDrawOffset) - lvlOffset, (int) (hitbox.y - yDrawOffset), width, height, null);
+//		drawHitbox(g);
     }
 
     private void setAnimation()
@@ -100,8 +99,9 @@ public class Player extends Entity
 
         if(running){ playerSpeed = 3.0F; animSpeed = 6; } else { playerSpeed = 2.0F; animSpeed = 10; }
         if(jump) jump();
-        if(!left && !right && !inAir)
-            return;
+        if (!inAir)
+            if ((!left && !right) || (right && left))
+                return;
 
         float xSpeed = 0;
 
