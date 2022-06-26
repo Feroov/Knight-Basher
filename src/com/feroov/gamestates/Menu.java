@@ -31,7 +31,6 @@ public class Menu extends State implements Statemethods
         menuHeight = (int) (backgroundImg.getHeight() * Game.SCALE);
         menuX = Game.GAME_WIDTH / 2 - menuWidth / 2;
         menuY = (int) (45 * Game.SCALE);
-
     }
 
     private void loadButtons()

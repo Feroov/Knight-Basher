@@ -1,6 +1,8 @@
 package com.feroov.utils;
 
 
+import com.feroov.main.Game;
+
 public class Constants
 {
 
@@ -37,4 +39,5 @@ public class Constants
             };
         }
     }
+
 }

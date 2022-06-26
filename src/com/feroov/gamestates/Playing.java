@@ -3,6 +3,7 @@ package com.feroov.gamestates;
 import com.feroov.entities.Player;
 import com.feroov.levels.LevelManager;
 import com.feroov.main.Game;
+import com.feroov.ui.PauseOverlay;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -13,27 +14,42 @@ public class Playing extends State implements Statemethods
 {
     private Player player;
     private LevelManager levelManager;
+    private PauseOverlay pauseOverlay;
+    private boolean paused = false;
 
-    public Playing(Game game) { super(game); initClasses(); }
+    public Playing(Game game)
+    {
+        super(game);
+        initClasses();
+    }
 
     private void initClasses()
     {
         levelManager = new LevelManager(game);
         player = new Player(200, 380, (int) (64 * Game.SCALE), (int) (40 * Game.SCALE));
         player.loadLevelData(levelManager.getCurrentLevel().getLevelData());
+
+        pauseOverlay = new PauseOverlay(this);
     }
 
     @Override
     public void update()
     {
-        levelManager.update();
-        player.update();
+        if (!paused)
+        {
+            levelManager.update();
+            player.update();
+        } else { pauseOverlay.update(); }
     }
 
     @Override
-    public void draw(Graphics g) {
+    public void draw(Graphics g)
+    {
         levelManager.draw(g);
         player.render(g);
+
+        if (paused)
+            pauseOverlay.draw(g);
     }
 
     @Override
@@ -47,7 +63,7 @@ public class Playing extends State implements Statemethods
             case KeyEvent.VK_D -> player.setRight(true);
             case KeyEvent.VK_SPACE -> player.setJump(true);
             case KeyEvent.VK_SHIFT -> player.setRunning(true);
-            case KeyEvent.VK_ESCAPE -> Gamestate.state = Gamestate.MENU;
+            case KeyEvent.VK_ESCAPE -> paused = !paused;
         }
 
         if(e.getKeyCode() == KeyEvent.VK_ENTER)  { player.setAttacking(true); }
@@ -67,24 +83,41 @@ public class Playing extends State implements Statemethods
         }
     }
 
+    public void mouseDragged(MouseEvent e) {
+        if (paused)
+            pauseOverlay.mouseDragged(e);
+    }
+
+
     @Override
     public void mouseClicked(MouseEvent e) {
 
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {
-
+    public void mousePressed(MouseEvent e)
+    {
+        if (paused)
+            pauseOverlay.mousePressed(e);
     }
 
     @Override
-    public void mouseReleased(MouseEvent e) {
-
+    public void mouseReleased(MouseEvent e)
+    {
+        if (paused)
+            pauseOverlay.mouseReleased(e);
     }
 
     @Override
-    public void mouseMoved(MouseEvent e) {
+    public void mouseMoved(MouseEvent e)
+    {
+        if (paused)
+            pauseOverlay.mouseMoved(e);
+    }
 
+    public void unpauseGame()
+    {
+        paused = false;
     }
 
     public void windowFocusLost()  { player.resetDirectionBooleans(); }

@@ -11,11 +11,17 @@ import java.util.Objects;
 
 public class LoadSave
 {
-    public static final String PLAYER_ATLAS = "player_sprites.png";
-    public static final String LEVEL_ATLAS = "outside_sprites.png";
-    public static final String LEVEL_ONE_DATA = "level_one_data.png";
-    public static final String MENU_BUTTONS = "button_atlas.png";
-    public static final String MENU_BACKGROUND = "menu_background.png";
+    public static final String PLAYER_ATLAS = "player/player_sprites.png";
+    public static final String LEVEL_ATLAS = "tiles/outside_sprites.png";
+
+    public static final String LEVEL_ONE_DATA = "levels/level_one_data.png";
+
+    public static final String MENU_BUTTONS = "menu/button_atlas.png";
+    public static final String MENU_BACKGROUND = "menu/menu_background.png";
+    public static final String PAUSE_BACKGROUND = "menu/pause_menu.png";
+    public static final String SOUND_BUTTONS = "menu/sound_button.png";
+    public static final String URM_BUTTONS = "menu/urm_buttons.png";
+    public static final String VOLUME_BUTTONS = "menu/volume_buttons.png";
 
     public static BufferedImage GetSpriteAtlas(String fileName)
     {

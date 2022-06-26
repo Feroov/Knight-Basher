@@ -2,6 +2,8 @@ package com.feroov.main;
 
 import com.feroov.inputs.KeyboardInputs;
 import com.feroov.inputs.MouseInputs;
+
+
 import static com.feroov.main.Game.GAME_HEIGHT;
 import static com.feroov.main.Game.GAME_WIDTH;
 
@@ -13,6 +15,7 @@ public class GamePanel extends JPanel
 {
     private MouseInputs mouseInputs;
     private Game game;
+
 
     public GamePanel(Game game)
     {
@@ -47,5 +50,8 @@ public class GamePanel extends JPanel
     }
 
     public Game getGame(){ return game; }
+
+
+
 }
 
