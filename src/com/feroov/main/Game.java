@@ -54,8 +54,17 @@ public class Game implements Runnable
     {
         switch (Gamestate.state)
         {
-            case MENU -> menu.update();
-            case PLAYING -> playing.update();
+            case MENU:
+                menu.update();
+                break;
+            case PLAYING:
+                playing.update();
+                break;
+            case OPTIONS:
+            case QUIT:
+            default:
+                System.exit(0);
+                break;
         }
     }
 
