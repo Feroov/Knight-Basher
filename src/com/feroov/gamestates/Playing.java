@@ -1,5 +1,6 @@
 package com.feroov.gamestates;
 
+import com.feroov.entities.EnemyManager;
 import com.feroov.entities.Player;
 import com.feroov.levels.LevelManager;
 import com.feroov.main.Game;
@@ -17,6 +18,7 @@ public class Playing extends State implements Statemethods
 {
     private Player player;
     private LevelManager levelManager;
+    private EnemyManager enemyManager;
     private PauseOverlay pauseOverlay;
     private boolean paused = false;
 
@@ -55,6 +57,7 @@ public class Playing extends State implements Statemethods
     private void initClasses()
     {
         levelManager = new LevelManager(game);
+        enemyManager = new EnemyManager(this);
         player = new Player(200, 380, (int) (64 * Game.SCALE), (int) (40 * Game.SCALE));
         player.loadLevelData(levelManager.getCurrentLevel().getLevelData());
 
@@ -67,6 +70,7 @@ public class Playing extends State implements Statemethods
         if (!paused)
         {
             levelManager.update();
+            enemyManager.update();
             player.update();
             checkCloseToBorder();
         } else { pauseOverlay.update(); }
@@ -107,6 +111,7 @@ public class Playing extends State implements Statemethods
 
         levelManager.draw(g, xLvlOffset);
         player.render(g, xLvlOffset);
+        enemyManager.draw(g, xLvlOffset);
 
         if (paused)
         {

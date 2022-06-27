@@ -1,5 +1,6 @@
 package com.feroov.utils;
 
+import com.feroov.entities.Goblin;
 import com.feroov.main.Game;
 
 import javax.imageio.ImageIO;
@@ -7,7 +8,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Objects;
+import static com.feroov.utils.Constants.EnemyConstants.GOBLIN;
 
 public class LoadSave
 {
@@ -27,6 +30,8 @@ public class LoadSave
     public static final String URM_BUTTONS = "menu/urm_buttons.png";
     public static final String VOLUME_BUTTONS = "menu/volume_buttons.png";
 
+    public static final String GOBLIN_SPRITE = "enemies/goblin_sprite.png";
+
     public static BufferedImage GetSpriteAtlas(String fileName)
     {
         BufferedImage img = null;
@@ -37,6 +42,20 @@ public class LoadSave
         catch (IOException e) { e.printStackTrace(); }}
 
         return img;
+    }
+
+    public static ArrayList<Goblin> getGoblins() {
+        BufferedImage img = GetSpriteAtlas(LEVEL_ONE_DATA);
+        ArrayList<Goblin> list = new ArrayList<>();
+        for (int j = 0; j < img.getHeight(); j++)
+            for (int i = 0; i < img.getWidth(); i++) {
+                Color color = new Color(img.getRGB(i, j));
+                int value = color.getGreen();
+                if (value == GOBLIN)
+                    list.add(new Goblin(i * Game.TILES_SIZE, j * Game.TILES_SIZE));
+            }
+        return list;
+
     }
 
     public static int[][] GetLevelData()
