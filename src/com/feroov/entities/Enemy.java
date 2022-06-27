@@ -2,6 +2,8 @@ package com.feroov.entities;
 
 import com.feroov.main.Game;
 
+import java.awt.geom.Rectangle2D;
+
 import static com.feroov.utils.Constants.EnemyConstants.*;
 import static com.feroov.utils.Constants.Directions.*;
 import static com.feroov.utils.HelpMethods.*;
@@ -10,22 +12,29 @@ public abstract class Enemy extends Entity
 {
 
     protected int aniIndex, enemyState, enemyType;
-    protected int aniTick, aniSpeed = 20;
+    protected int aniTick, aniSpeed = 17;
     protected boolean firstUpdate = true;
     protected boolean inAir;
     protected float fallSpeed;
     protected float gravity = 0.04f * Game.SCALE;
-    protected float walkSpeed = 0.35f * Game.SCALE;
+    protected float walkSpeed = 0.45f * Game.SCALE;
     protected int walkDir = LEFT;
 
     protected int tileY;
     protected float attackDistance = Game.TILES_SIZE;
+
+    protected int maxHealth;
+    protected int currentHealth;
+    protected boolean active = true;
+    protected boolean attackChecked;
 
     public Enemy(float x, float y, int width, int height, int enemyType)
     {
         super(x, y, width, height);
         this.enemyType = enemyType;
         initHitBox(x, y, width, height);
+        maxHealth = GetMaxHealth(enemyType);
+        currentHealth = maxHealth;
     }
 
     protected void firstUpdateCheck(int[][] lvlData)
@@ -77,7 +86,8 @@ public abstract class Enemy extends Entity
             walkDir = LEFT;
     }
 
-    protected boolean canSeePlayer(int[][] lvlData, Player player) {
+    protected boolean canSeePlayer(int[][] lvlData, Player player)
+    {
         int playerTileY = (int) (player.getHitBox().y / Game.TILES_SIZE);
         if (playerTileY == tileY)
             if (isPlayerInRange(player))
@@ -85,8 +95,23 @@ public abstract class Enemy extends Entity
                 if (IsSightClear(lvlData, hitbox, player.hitbox, tileY))
                     return true;
             }
-
         return false;
+    }
+
+    public void hurt(int amount) {
+        currentHealth -= amount;
+        if (currentHealth <= 0)
+            newState(DEAD);
+        else
+            newState(HIT);
+    }
+
+    // Changed the name from "checkEnemyHit" to checkPlayerHit
+    protected void checkPlayerHit(Rectangle2D.Float attackBox, Player player) {
+        if (attackBox.intersects(player.hitbox))
+            player.changeHealth(-GetEnemyDmg(enemyType));
+        attackChecked = true;
+
     }
 
     protected boolean isPlayerInRange(Player player)
@@ -118,10 +143,29 @@ public abstract class Enemy extends Entity
             if (aniIndex >= GetSpriteAmount(enemyType, enemyState))
             {
                 aniIndex = 0;
-                if(enemyState == ATTACK)
-                    enemyState = IDLE;
+                switch (enemyState)
+                {
+                    case ATTACK, HIT -> enemyState = IDLE;
+                    case DEAD -> active = false;
+                }
             }
         }
+    }
+
+    public void resetEnemy()
+    {
+        hitbox.x = x;
+        hitbox.y = y;
+        firstUpdate = true;
+        currentHealth = maxHealth;
+        newState(IDLE);
+        active = true;
+        fallSpeed = 0;
+    }
+
+    public boolean isActive()
+    {
+        return active;
     }
 
     protected void changeWalkDir()

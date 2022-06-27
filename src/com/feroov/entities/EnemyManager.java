@@ -1,10 +1,12 @@
 package com.feroov.entities;
 
 import java.awt.Graphics;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import com.feroov.gamestates.Playing;
+import com.feroov.levels.Level;
 import com.feroov.utils.LoadSave;
 import static com.feroov.utils.Constants.EnemyConstants.*;
 
@@ -18,18 +20,21 @@ public class EnemyManager {
     {
         this.playing = playing;
         loadEnemyImgs();
-        addEnemies();
     }
 
-    private void addEnemies()
-    {
-        goblins = LoadSave.getGoblins();
-    }
+    public void loadEnemies(Level level) { goblins = level.getGoblins(); }
 
     public void update(int[][] lvlData, Player player)
     {
+        boolean isAnyActive = false;
         for (Goblin c : goblins)
-            c.update(lvlData, player);
+            if (c.isActive())
+            {
+                c.update(lvlData, player);
+                isAnyActive = true;
+            }
+        if(!isAnyActive)
+            playing.setLevelCompleted(true);
     }
 
     public void draw(Graphics g, int xLvlOffset) { drawGoblins(g, xLvlOffset); }
@@ -37,13 +42,33 @@ public class EnemyManager {
     private void drawGoblins(Graphics g, int xLvlOffset)
     {
         for (Goblin goblin : goblins)
-        {
-            g.drawImage(goblinArray[goblin.getEnemyState()][goblin.getAniIndex()],
-                    (int) goblin.hitbox.x - xLvlOffset - GOBLIN_DRAWOFFSET_X, (int) goblin.hitbox.y - GOBLIN_DRAWOFFSET_Y, GOBLIN_WIDTH,
-                    GOBLIN_HEIGHT, null);
-//            goblin.drawHitBox(g, xLvlOffset);
-        }
+            if (goblin.isActive())
+            {
+                g.drawImage(goblinArray[goblin.getEnemyState()][goblin.getAniIndex()],
+                        (int) goblin.getHitBox().x - xLvlOffset - GOBLIN_DRAWOFFSET_X + goblin.flipX(), (int) goblin.getHitBox().y - GOBLIN_DRAWOFFSET_Y,
+                        GOBLIN_WIDTH * goblin.flipW(), GOBLIN_HEIGHT, null);
+//				c.drawHitbox(g, xLvlOffset);
+//				c.drawAttackBox(g, xLvlOffset);
 
+            }
+
+    }
+
+    public void checkEnemyHit(Rectangle2D.Float attackBox)
+    {
+        for (Goblin goblin : goblins)
+            if (goblin.isActive())
+                if (attackBox.intersects(goblin.getHitBox()))
+                {
+                    goblin.hurt(10);
+                    return;
+                }
+    }
+
+    public void resetAllEnemies()
+    {
+        for (Goblin c : goblins)
+            c.resetEnemy();
     }
 
     private void loadEnemyImgs()
