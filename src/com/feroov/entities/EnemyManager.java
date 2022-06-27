@@ -24,13 +24,12 @@ public class EnemyManager {
     private void addEnemies()
     {
         goblins = LoadSave.getGoblins();
-        System.out.println("size of crabs: " + goblins.size());
     }
 
-    public void update()
+    public void update(int[][] lvlData)
     {
         for (Goblin c : goblins)
-            c.update();
+            c.update(lvlData);
     }
 
     public void draw(Graphics g, int xLvlOffset) { drawGoblins(g, xLvlOffset); }
@@ -38,8 +37,12 @@ public class EnemyManager {
     private void drawGoblins(Graphics g, int xLvlOffset)
     {
         for (Goblin goblin : goblins)
+        {
             g.drawImage(goblinArray[goblin.getEnemyState()][goblin.getAniIndex()],
-                    (int) goblin.hitbox.x - xLvlOffset, (int) goblin.hitbox.y, GOBLIN_WIDTH, GOBLIN_HEIGHT, null);
+                    (int) goblin.hitbox.x - xLvlOffset - GOBLIN_DRAWOFFSET_X, (int) goblin.hitbox.y - GOBLIN_DRAWOFFSET_Y, GOBLIN_WIDTH,
+                    GOBLIN_HEIGHT, null);
+//            goblin.drawHitBox(g, xLvlOffset);
+        }
 
     }
 
