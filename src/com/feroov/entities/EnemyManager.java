@@ -26,10 +26,10 @@ public class EnemyManager {
         goblins = LoadSave.getGoblins();
     }
 
-    public void update(int[][] lvlData)
+    public void update(int[][] lvlData, Player player)
     {
         for (Goblin c : goblins)
-            c.update(lvlData);
+            c.update(lvlData, player);
     }
 
     public void draw(Graphics g, int xLvlOffset) { drawGoblins(g, xLvlOffset); }
